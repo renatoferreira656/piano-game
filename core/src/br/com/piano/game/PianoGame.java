@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,11 +15,13 @@ public class PianoGame extends ApplicationAdapter {
 	
 	private ShapeRenderer shape;
 	private List<Key> keys;
+	private KeyInputProcessor processor;
 	
 	@Override
 	public void create () {
 		shape = new ShapeRenderer();
 		keys = new ArrayList<Key>();
+		processor = new KeyInputProcessor(this.keys, this.shape);
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class PianoGame extends ApplicationAdapter {
 		float widthBlack = (width / 2);
 		if(keys.isEmpty()){
 			for(float i = space; i+width <= Gdx.graphics.getWidth(); i= i+width){
-				keys.add(new Key(i, space, width, height).setColor(Color.BLACK).setShapeType(ShapeType.Line));
+				keys.add(new Key(i, space, width, height, 1).setColor(Color.BLACK).setShapeType(ShapeType.Line));
 				i=i+space;
 			}
 			
@@ -43,7 +44,7 @@ public class PianoGame extends ApplicationAdapter {
 			
 			for(float i = space + widthBlack + (widthBlack / 2) + 3; i+width <= Gdx.graphics.getWidth(); i= i+width){
 				if(third != 2){
-					keys.add(new Key(i, space + (height * 1 / 4), widthBlack, (height * 3 / 4)).setColor(Color.BLACK).setShapeType(ShapeType.Filled));
+					keys.add(new Key(i, space + (height * 1 / 4), widthBlack, (height * 3 / 4), 2).setColor(Color.BLACK).setShapeType(ShapeType.Filled));
 				}
 				i=i+space;
 				third++;
@@ -54,65 +55,10 @@ public class PianoGame extends ApplicationAdapter {
 			key.draw(shape);
 		}
 		
-		Gdx.input.setInputProcessor(getInputProcessor());
+		Gdx.input.setInputProcessor(processor);
 		
 	}
 
-	private InputProcessor getInputProcessor() {
-		return new InputProcessor() {
-			
-			@Override
-			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-				for (Key key : keys) {
-					if (key.isInside(screenX, screenX)){
-						key.setColor(Color.BLACK).defaultValues().draw(shape);
-					}
-				}
-				return false;
-			}
-			
-			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				return false;
-			}
-			
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				for (Key key : keys) {
-					if (key.isInside(screenX, screenX)){
-						key.setColor(Color.RED).setShapeType(ShapeType.Filled).draw(shape);
-					}
-				}
-				return false;
-			}
-			
-			@Override
-			public boolean scrolled(int amount) {
-				return false;
-			}
-			
-			@Override
-			public boolean mouseMoved(int screenX, int screenY) {
-				return false;
-			}
-			
-			@Override
-			public boolean keyUp(int keycode) {
-				return false;
-			}
-			
-			@Override
-			public boolean keyTyped(char character) {
-				return false;
-			}
-			
-			@Override
-			public boolean keyDown(int keycode) {
-				return false;
-			}
-		};
-	}
-	
 	@Override
 	public void dispose () {
 		shape.dispose();
