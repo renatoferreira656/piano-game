@@ -40,14 +40,14 @@ public class PianoGame extends ApplicationAdapter {
 				i=i+space;
 			}
 			
-			int third = 0;
+			int emptyKeys = 0;
 			
 			for(float i = space + widthBlack + (widthBlack / 2) + 3; i+width <= Gdx.graphics.getWidth(); i= i+width){
-				if(third != 2){
+				if(emptyKeys != 2 && emptyKeys != 6){
 					keys.add(new Key(i, space + (height * 1 / 4), widthBlack, (height * 3 / 4), 2).setColor(Color.BLACK).setShapeType(ShapeType.Filled));
 				}
 				i=i+space;
-				third++;
+				emptyKeys++;
 			}
 		}
 		
