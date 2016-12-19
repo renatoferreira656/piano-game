@@ -19,8 +19,15 @@ public class KeyInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (this.touched != null) {
-			this.touched.defaultValues().draw(shape);
+		Key touched = null;
+		for (Key key : keys) {
+			touched = key;
+			if (touched.isInside(screenX, screenY)) {
+				touched.defaultValues();
+			}
+		}
+		if (touched != null) {
+			touched.draw(shape);
 		}
 		return false;
 	}
